@@ -1,0 +1,1 @@
+mcrender -p 100 20 100 -s 200 200 200 demo_map/ out.png -v
