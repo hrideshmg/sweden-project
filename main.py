@@ -3,6 +3,7 @@ import json
 import os
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from mcrender import render
 from pydantic import BaseModel
 
@@ -13,6 +14,17 @@ RENDER_SIZE = (100, 160, 100)
 DEPTH = 40
 
 app = FastAPI()
+origins = [
+    "null",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class WorldPath(BaseModel):
@@ -51,7 +63,7 @@ def start_process(path: WorldPath):
             {
                 "id": index,
                 "image": f"./renders/{index}.png",
-                "title": f"Chunk {index}",
+                "title": f"Chunk {index+1}",
                 "description": summary.caption,
                 "song": summary.song,
             }
