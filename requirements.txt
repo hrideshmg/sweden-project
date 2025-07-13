@@ -3,3 +3,6 @@ cloup==3.0.7
 mcrender==2.0.0
 pillow==11.3.0
 platformdirs==4.3.8
+google-genai
+python-dotenv
+tqdm
