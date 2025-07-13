@@ -614,46 +614,109 @@
     </div>
 
     <script>
-      // Sample data structure - replace with your actual data
-      const scrapbookData = [
-        {
-          id: 0,
-          image: "./renders/0.png",
-          title: "Chunk 1: The Hidden Valley",
-          description:
-            "The land stretched, a tapestry of green and brown, hinting at deeper secrets beneath its surface. Small depressions marked the earth, beckoning curious descent into the cool stone, where veins of valuable ore lay hidden. Below, the quiet murmur of underground water contrasted with the fiery glow of molten rock, a landscape holding both promise and peril for those who ventured into its depths.",
-          song: "Living Mice",
-        },
-      ];
+      let scrapbookData = [];
+      let audioPlayer = null;
+
+      async function fetchScrapbookData() {
+        const container = document.getElementById("scrapbook-container");
+
+        try {
+          // Show loading state
+          container.innerHTML =
+            '<div class="loading">Loading your world exploration...</div>';
+
+          const response = await fetch("http://localhost:8000/start_render", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              world_path: "./demo_map/",
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          // Validate data structure
+          if (!Array.isArray(data)) {
+            throw new Error("Invalid data format received from API");
+          }
+
+          // Update the global scrapbook data
+          scrapbookData = data;
+
+          // Load the entries into the UI
+          loadScrapbookEntries();
+        } catch (error) {
+          console.error("Error fetching scrapbook data:", error);
+          container.innerHTML = `
+        <div class="no-entries">
+          <p>Failed to load world chunks: ${error.message}</p>
+          <button onclick="fetchScrapbookData()" style="
+            background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+            color: #f5deb3;
+            border: 2px solid #654321;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 15px;
+          ">Retry</button>
+        </div>
+      `;
+        }
+      }
 
       function loadScrapbookEntries() {
         const container = document.getElementById("scrapbook-container");
 
         if (scrapbookData.length === 0) {
-          container.innerHTML =
-            '<div class="no-entries">No world chunks have been generated yet. Run your Python script to create some entries!</div>';
+          container.innerHTML = `
+      <div class="no-entries">
+        <p>No world chunks have been scanned yet.</p>
+        <button id="generate-button" onclick="fetchScrapbookData()" style="
+          background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+          color: #f5deb3;
+          border: 2px solid #654321;
+          padding: 12px 24px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 1.1rem;
+          margin-top: 20px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.3);
+        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          Scan Chunks ⚒️
+        </button>
+      </div>
+    `;
           return;
         }
 
         const gridHTML = `
-                <div class="scrapbook-grid">
-                    ${scrapbookData
-                      .map(
-                        (entry) => `
-                        <div class="scrapbook-entry" onclick="openModal(${entry.id})">
-                            <img src="${entry.image}" alt="${entry.title}" class="chunk-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOEI0NTEzIi8+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNBMDUyMkQiLz4KPHN2ZyB4PSIxMzAiIHk9IjgwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNDRDg1M0YiPgo8cGF0aCBkPSJNMjAgMEwwIDIwTDIwIDQwTDQwIDIwWiIvPgo8L3N2Zz4KPHR5cGUgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyBmaWxsOiAjRjVERUI3OyB0ZXh0LXNoYWRvdzogMXB4IDFweCAxcHggcmdiYSgwLDAsMCwwLjgpOyIgeD0iMTUwIiB5PSIxMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1pbmVjcmFmdCBDaHVuazwvdGV4dD4KPC9zdmc+'">
-                            <div class="chunk-title">${entry.title}</div>
-                            <div class="chunk-description">${entry.description.substring(0, 120)}...</div>
-                            <div class="song-info">
-                                <span class="song-title">${entry.song}</span>
-                                <button class="play-button" onclick="event.stopPropagation(); playPreview('${entry.song}')">Preview</button>
-                            </div>
-                        </div>
-                    `,
-                      )
-                      .join("")}
-                </div>
-            `;
+                  <div class="scrapbook-grid">
+                      ${scrapbookData
+                        .map(
+                          (entry) => `
+                          <div class="scrapbook-entry" onclick="openModal(${entry.id})">
+                              <img src="${entry.image}" alt="${entry.title}" class="chunk-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOEI0NTEzIi8+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNBMDUyMkQiLz4KPHN2ZyB4PSIxMzAiIHk9IjgwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNDRDg1M0YiPgo8cGF0aCBkPSJNMjAgMEwwIDIwTDIwIDQwTDQwIDIwWiIvPgo8L3N2Zz4KPHR5cGUgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyBmaWxsOiAjRjVERUI3OyB0ZXh0LXNoYWRvdzogMXB4IDFweCAxcHggcmdiYSgwLDAsMCwwLjgpOyIgeD0iMTUwIiB5PSIxMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1pbmVjcmFmdCBDaHVuazwvdGV4dD4KPC9zdmc+'">
+                              <div class="chunk-title">${entry.title}</div>
+                              <div class="chunk-description">${entry.description.substring(0, 120)}...</div>
+                              <div class="song-info">
+                                  <span class="song-title">${entry.song}</span>
+                                  <button class="play-button" onclick="event.stopPropagation(); playPreview('${entry.song}')">Preview</button>
+                              </div>
+                          </div>
+                      `,
+                        )
+                        .join("")}
+                  </div>
+              `;
 
         container.innerHTML = gridHTML;
       }
@@ -669,17 +732,33 @@
         document.getElementById("modal-song-title").textContent = entry.song;
 
         modal.style.display = "block";
+
+        if (audioPlayer) {
+          audioPlayer.pause();
+          audioPlayer = null;
+        }
+
+        // Create a new audio player
+        audioPlayer = new Audio(`${entry.song}.mp3`);
+        audioPlayer.play();
+
+        modal.style.display = "block";
       }
 
       function closeModal() {
         document.getElementById("modal").style.display = "none";
+        // Stop audio if playing
+        if (audioPlayer) {
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+          audioPlayer = null;
+        }
       }
 
       function playPreview(songName) {
         // Placeholder for song preview functionality
-        alert(
-          `🎵 Playing preview of "${songName}"\n\nIn a real implementation, this would play the associated song or show more details about the soundtrack for this chunk.`,
-        );
+        audioPlayer = new Audio(`${songName}.mp3`);
+        audioPlayer.play();
       }
 
       // Event listeners
