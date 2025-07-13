@@ -6,7 +6,7 @@ This project is a creative tool that transforms your old Minecraft worlds into a
 ## Why Did I Make This?
 Like a lot of kids, I grew up playing Minecraft and its a game that I hold quite dear to my heart. To me, it was more than just a game; it was a world where I made some of my best memories, building, exploring, and laughing with friends. I built this project as a sort of tribute to the game and to help others revisit the adventures they once had in those pixelated landscapes.
 
-This project was built solo during the [OSDHack](https://hack.osdc.dev/) Hackathon where the theme was to build something to reimagine something from your past. I built this solo because I've been feeling pretty out of touch with my creative and technical side and It is by all means a labour of love, hope you like it :)
+This project was built solo during the [OSDHack](https://hack.osdc.dev/) Hackathon where the theme was to build something to reimagine something from your past. I built this solo because lately I've been feeling pretty out of touch with my creative and technical side and It is by all means a labour of love, hope you like it :)
 
 ## How It Works
 
