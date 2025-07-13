@@ -739,7 +739,7 @@
         }
 
         // Create a new audio player
-        audioPlayer = new Audio(`${entry.song}.mp3`);
+        audioPlayer = new Audio(`songs/${entry.song}.mp3`);
         audioPlayer.play();
 
         modal.style.display = "block";
@@ -757,7 +757,7 @@
 
       function playPreview(songName) {
         // Placeholder for song preview functionality
-        audioPlayer = new Audio(`${songName}.mp3`);
+        audioPlayer = new Audio(`songs/${songName}.mp3`);
         audioPlayer.play();
       }
 
