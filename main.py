@@ -9,7 +9,7 @@ RENDER_SIZE = (100, 160, 100)
 DEPTH = 40
 
 
-world_path = "./demo_map2/"
+world_path = "./demo_map/"
 
 
 def prep_render_folder():
