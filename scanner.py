@@ -2,13 +2,14 @@ from dataclasses import dataclass
 from typing import List
 
 import amulet
+from tqdm import tqdm
 
 # Set threshold in ticks (20 ticks = 1 second)
 # 1 hour = 3600 seconds × 20 = 72000 ticks
 INHABITED_THRESHOLD = 50000
 
-# Minimum distance between chunks
-MIN_DIST = 32
+# Minimum distance between chunks (in chunks)
+MIN_DIST = 8
 
 
 @dataclass
@@ -32,12 +33,14 @@ def filter_close_chunks(chunks) -> List[ChunkData]:
 
 
 # Returns a sorted list of active chunks
-def scanner(world_path) -> List[ChunkData]:
+def scan_chunks(world_path) -> List[ChunkData]:
     level = amulet.load_level(world_path)
     active_chunks = []
 
     for dimension in level.dimensions:
-        for chunk, _, _ in level.get_chunk_slice_box(dimension):
+        for chunk, _, _ in tqdm(
+            level.get_chunk_slice_box(dimension), desc="Scanning Chunks", unit=""
+        ):
             # Chunk is not generated, skip
             if chunk.status == -1:
                 continue
@@ -48,7 +51,7 @@ def scanner(world_path) -> List[ChunkData]:
                 )
 
             # temp
-            if len(active_chunks) > 2:
+            if len(active_chunks) >= 2:
                 break
 
     filtered_chunks = filter_close_chunks(active_chunks)
@@ -57,4 +60,4 @@ def scanner(world_path) -> List[ChunkData]:
 
 
 if __name__ == "__main__":
-    print(scanner("./demo_map/"))
+    print(scan_chunks("./demo_map/"))
