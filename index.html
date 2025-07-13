@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Sweden Project</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=VT323&family=Roboto:wght@300;400;500&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background: radial-gradient(
+            circle at 25% 25%,
+            rgba(101, 67, 33, 0.3) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 75% 75%,
+            rgba(139, 69, 19, 0.2) 0%,
+            transparent 50%
+          ),
+          linear-gradient(
+            45deg,
+            #556b2f 0%,
+            #6b8e23 25%,
+            #8f9779 50%,
+            #a9ba9d 75%,
+            #dbeac2 100%
+          );
+        background-size:
+          400px 400px,
+          300px 300px,
+          100% 100%;
+        background-attachment: fixed;
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Wood grain texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 1px,
+            rgba(101, 67, 33, 0.1) 1px,
+            rgba(101, 67, 33, 0.1) 3px
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 8px,
+            rgba(139, 69, 19, 0.05) 8px,
+            rgba(139, 69, 19, 0.05) 12px
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Animated wood chips/sawdust */
+      .bg-chip {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #8b4513;
+        border-radius: 50%;
+        animation: drift 12s linear infinite;
+        z-index: 0;
+        opacity: 0.6;
+      }
+
+      .bg-chip:nth-child(1) {
+        top: -10px;
+        left: 10%;
+        animation-delay: 0s;
+        background: #a0522d;
+      }
+      .bg-chip:nth-child(2) {
+        top: -10px;
+        left: 30%;
+        animation-delay: 3s;
+        background: #cd853f;
+      }
+      .bg-chip:nth-child(3) {
+        top: -10px;
+        left: 50%;
+        animation-delay: 6s;
+        background: #deb887;
+      }
+      .bg-chip:nth-child(4) {
+        top: -10px;
+        left: 70%;
+        animation-delay: 9s;
+        background: #8b4513;
+      }
+      .bg-chip:nth-child(5) {
+        top: -10px;
+        left: 90%;
+        animation-delay: 1s;
+        background: #a0522d;
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translateY(-10px) rotate(0deg);
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+        }
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        background: linear-gradient(
+          135deg,
+          #654321 0%,
+          #8b4513 25%,
+          #a0522d 50%,
+          #cd853f 75%,
+          #deb887 100%
+        );
+        background-size: 200% 200%;
+        animation: barrelShine 8s ease-in-out infinite;
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow:
+          inset 0 4px 8px rgba(0, 0, 0, 0.3),
+          inset 0 -4px 8px rgba(255, 255, 255, 0.1),
+          0 12px 40px rgba(0, 0, 0, 0.4);
+        border: 3px solid #654321;
+        position: relative;
+        overflow: hidden;
+      }
+
+      @keyframes barrelShine {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* Barrel metal bands */
+      .header::before,
+      .header::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, #444 0%, #666 50%, #444 100%);
+        border-radius: 4px;
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.3),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .header::before {
+        top: 20px;
+      }
+
+      .header::after {
+        bottom: 20px;
+      }
+
+      .header h1 {
+        font-family: "VT323", cursive;
+        font-size: 3.5rem;
+        color: #f5deb3;
+        margin-bottom: 10px;
+        text-shadow:
+          2px 2px 4px rgba(0, 0, 0, 0.8),
+          0 0 10px rgba(245, 222, 179, 0.5);
+        position: relative;
+        z-index: 2;
+      }
+
+      .header p {
+        font-size: 1.3rem;
+        color: #deb887;
+        font-weight: 400;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        position: relative;
+        z-index: 2;
+      }
+
+      .scrapbook-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        padding: 20px 0;
+      }
+
+      .scrapbook-entry {
+        background: linear-gradient(
+          135deg,
+          #deb887 0%,
+          #cd853f 25%,
+          #a0522d 50%,
+          #8b4513 75%,
+          #654321 100%
+        );
+        background-size: 150% 150%;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.2),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+          0 8px 25px rgba(0, 0, 0, 0.4);
+        transition: all 0.4s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #654321;
+      }
+
+      .scrapbook-entry:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.3),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+          0 15px 35px rgba(0, 0, 0, 0.5);
+        background-position: 100% 100%;
+      }
+
+      /* Wood grain texture for entries */
+      .scrapbook-entry::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(101, 67, 33, 0.1) 2px,
+          rgba(101, 67, 33, 0.1) 4px
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .chunk-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 3px solid #654321;
+        transition: transform 0.3s ease;
+        position: relative;
+        z-index: 2;
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.2),
+          0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .scrapbook-entry:hover .chunk-image {
+        transform: scale(1.05);
+        border-color: #8b4513;
+      }
+
+      .chunk-title {
+        font-family: "VT323", cursive;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #f5deb3;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .chunk-title::before {
+        content: "⚒️";
+        font-size: 1.5rem;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+      }
+
+      .chunk-description {
+        font-size: 1rem;
+        color: #f5deb3;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        opacity: 0.95;
+        position: relative;
+        z-index: 2;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+      }
+
+      .song-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+        background: linear-gradient(
+          135deg,
+          #8b4513 0%,
+          #a0522d 50%,
+          #cd853f 100%
+        );
+        border-radius: 10px;
+        border: 2px solid #654321;
+        position: relative;
+        z-index: 2;
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.1),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .song-info::before {
+        content: "🎵";
+        font-size: 1.2rem;
+        filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.8));
+      }
+
+      .song-title {
+        font-family: "VT323", cursive;
+        font-weight: 600;
+        color: #f5deb3;
+        font-size: 1.3rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .play-button {
+        background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+        color: #f5deb3;
+        border: 2px solid #654321;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-left: auto;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.1),
+          0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .play-button:hover {
+        background: linear-gradient(135deg, #cd853f 0%, #a0522d 100%);
+        transform: scale(1.05);
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.2),
+          0 4px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+      }
+
+      .modal-content {
+        background: linear-gradient(
+          135deg,
+          #deb887 0%,
+          #cd853f 25%,
+          #a0522d 50%,
+          #8b4513 75%,
+          #654321 100%
+        );
+        margin: 5% auto;
+        padding: 35px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 600px;
+        position: relative;
+        animation: modalAppear 0.4s ease;
+        border: 3px solid #654321;
+        box-shadow:
+          inset 0 4px 8px rgba(255, 255, 255, 0.1),
+          inset 0 -4px 8px rgba(0, 0, 0, 0.3),
+          0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      @keyframes modalAppear {
+        from {
+          opacity: 0;
+          transform: scale(0.8) rotate(-2deg);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      .close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #f5deb3;
+        transition: all 0.3s ease;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        z-index: 10;
+      }
+
+      .close:hover {
+        color: #ffffff;
+        transform: scale(1.2);
+        text-shadow:
+          2px 2px 4px rgba(0, 0, 0, 0.8),
+          0 0 10px rgba(245, 222, 179, 0.8);
+      }
+
+      .modal-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border: 3px solid #654321;
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.2),
+          0 6px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      .modal h2 {
+        color: #f5deb3;
+        margin-bottom: 15px;
+        font-size: 2.2rem;
+        font-family: "VT323", cursive;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .modal p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #f5deb3;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+      }
+
+      .modal-song {
+        background: linear-gradient(
+          135deg,
+          #8b4513 0%,
+          #a0522d 50%,
+          #cd853f 100%
+        );
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        border: 3px solid #654321;
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.1),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-song h3 {
+        color: #f5deb3;
+        margin-bottom: 10px;
+        font-size: 1.6rem;
+        font-family: "VT323", cursive;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .note-animation {
+        display: inline-block;
+        animation: bounce 0.8s ease infinite alternate;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+      }
+
+      @keyframes bounce {
+        from {
+          transform: translateY(0px);
+        }
+        to {
+          transform: translateY(-8px);
+        }
+      }
+
+      .loading {
+        text-align: center;
+        padding: 50px;
+        color: #f5deb3;
+        font-size: 1.2rem;
+        background: linear-gradient(
+          135deg,
+          #8b4513 0%,
+          #a0522d 50%,
+          #cd853f 100%
+        );
+        border-radius: 15px;
+        border: 2px solid #654321;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.1),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .no-entries {
+        text-align: center;
+        padding: 50px;
+        color: #f5deb3;
+        font-size: 1.2rem;
+        background: linear-gradient(
+          135deg,
+          #8b4513 0%,
+          #a0522d 50%,
+          #cd853f 100%
+        );
+        border-radius: 15px;
+        margin-top: 40px;
+        border: 2px solid #654321;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.1),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2.5rem;
+        }
+
+        .header p {
+          font-size: 1.1rem;
+        }
+
+        .scrapbook-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+    <div class="bg-chip"></div>
+
+    <div class="container">
+      <div class="header">
+        <h1>The Sweden Project</h1>
+        <p>Discover the hidden stories within your generated world chunks</p>
+      </div>
+
+      <div id="scrapbook-container">
+        <div class="loading">Loading your world exploration...</div>
+      </div>
+    </div>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="modal-image" class="modal-image" src="" alt="Chunk Detail" />
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+        <div class="modal-song">
+          <h3>
+            🎵 Soundtrack: <span class="note-animation">♪</span>
+            <span id="modal-song-title"></span>
+            <span class="note-animation">♪</span>
+          </h3>
+          <p
+            style="
+              margin-top: 10px;
+              color: #f5deb3;
+              font-style: italic;
+              text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+            "
+          >
+            Close your eyes and imagine exploring this chunk while this song
+            plays in the background...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sample data structure - replace with your actual data
+      const scrapbookData = [
+        {
+          id: 0,
+          image: "./renders/0.png",
+          title: "Chunk 1: The Hidden Valley",
+          description:
+            "The land stretched, a tapestry of green and brown, hinting at deeper secrets beneath its surface. Small depressions marked the earth, beckoning curious descent into the cool stone, where veins of valuable ore lay hidden. Below, the quiet murmur of underground water contrasted with the fiery glow of molten rock, a landscape holding both promise and peril for those who ventured into its depths.",
+          song: "Living Mice",
+        },
+      ];
+
+      function loadScrapbookEntries() {
+        const container = document.getElementById("scrapbook-container");
+
+        if (scrapbookData.length === 0) {
+          container.innerHTML =
+            '<div class="no-entries">No world chunks have been generated yet. Run your Python script to create some entries!</div>';
+          return;
+        }
+
+        const gridHTML = `
+                <div class="scrapbook-grid">
+                    ${scrapbookData
+                      .map(
+                        (entry) => `
+                        <div class="scrapbook-entry" onclick="openModal(${entry.id})">
+                            <img src="${entry.image}" alt="${entry.title}" class="chunk-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOEI0NTEzIi8+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNBMDUyMkQiLz4KPHN2ZyB4PSIxMzAiIHk9IjgwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNDRDg1M0YiPgo8cGF0aCBkPSJNMjAgMEwwIDIwTDIwIDQwTDQwIDIwWiIvPgo8L3N2Zz4KPHR5cGUgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyBmaWxsOiAjRjVERUI3OyB0ZXh0LXNoYWRvdzogMXB4IDFweCAxcHggcmdiYSgwLDAsMCwwLjgpOyIgeD0iMTUwIiB5PSIxMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1pbmVjcmFmdCBDaHVuazwvdGV4dD4KPC9zdmc+'">
+                            <div class="chunk-title">${entry.title}</div>
+                            <div class="chunk-description">${entry.description.substring(0, 120)}...</div>
+                            <div class="song-info">
+                                <span class="song-title">${entry.song}</span>
+                                <button class="play-button" onclick="event.stopPropagation(); playPreview('${entry.song}')">Preview</button>
+                            </div>
+                        </div>
+                    `,
+                      )
+                      .join("")}
+                </div>
+            `;
+
+        container.innerHTML = gridHTML;
+      }
+
+      function openModal(entryId) {
+        const entry = scrapbookData.find((e) => e.id === entryId);
+        const modal = document.getElementById("modal");
+
+        document.getElementById("modal-image").src = entry.image;
+        document.getElementById("modal-title").textContent = entry.title;
+        document.getElementById("modal-description").textContent =
+          entry.description;
+        document.getElementById("modal-song-title").textContent = entry.song;
+
+        modal.style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      function playPreview(songName) {
+        // Placeholder for song preview functionality
+        alert(
+          `🎵 Playing preview of "${songName}"\n\nIn a real implementation, this would play the associated song or show more details about the soundtrack for this chunk.`,
+        );
+      }
+
+      // Event listeners
+      document.querySelector(".close").addEventListener("click", closeModal);
+      document.getElementById("modal").addEventListener("click", function (e) {
+        if (e.target === this) closeModal();
+      });
+
+      // Load entries when page loads
+      document.addEventListener("DOMContentLoaded", loadScrapbookEntries);
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeModal();
+      });
+    </script>
+  </body>
+</html>
